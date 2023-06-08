@@ -2,8 +2,15 @@ import Arm3D from "./arm3D.js";
 import * as THREE from './threejs/three.module.js';
 import {STLLoader} from './threejs/STLLoader.js';
 import Mankinematic from './mathjs/kinematic.js';
+import FirebaseIOT from "./firebase.js";
 
-// get documents
+// firebased
+const appSetting = {
+    databaseURL: "https://arm-iot-67286-default-rtdb.asia-southeast1.firebasedatabase.app/",
+};
+const dataIOT = new FirebaseIOT(appSetting);
+const commendKeys = ["J1","J2","J3","J4","E"];
+
 // buttons
 const position_btns = ["#zplus-btn", "#zneg-btn","#xplus-btn", "#xneg-btn"];
 const set_position = ["ZP","ZN","XP","XN"];
@@ -90,7 +97,6 @@ const robot_parts = [
     },
 ];
 
-
 const scaleRatio = 0.05;  
 const stlLoader = new STLLoader();
 const loadRobots = (manipulator) =>{
@@ -158,11 +164,13 @@ const solveINV = (rad_phi0, targetT)=>{
 const sendData = (data)=>{
     let containData = [...data];
     containData.push(manKi.endEffector);
-    
+    containData.forEach((cm, index)=>{
+        dataIOT.updateCommend(commendKeys[index], cm);
+    });
 };
 
 $(document).ready(()=>{
-
+    
     var canvas = document.getElementById('arm-view');
     var manipulator = new Arm3D(canvas);
 
@@ -264,7 +272,6 @@ $(document).ready(()=>{
             };
         });
     };
-
     // endeffector control
     
     end_btns.forEach((btn, index)=>{
@@ -280,7 +287,13 @@ $(document).ready(()=>{
     manipulator.init();
     loadRobots(manipulator);
     
+    // manKi.update_cur_angle(dataIOT.getSensorSignal());
+    // console.log(dataIOT.getSensorSignal())
     function render() {
+        let joinSignal = dataIOT.getSensorSignal();
+        joinSignal.forEach((angle)=>{
+            manKi.update_cur_angle(angle);
+        });
         update_data(manKi.raw_current);
         update_extention(manKi.endEffector);
         manKi.raw_current.forEach((raw, index)=>{
