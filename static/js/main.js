@@ -181,6 +181,7 @@ $(document).ready(()=>{
     $('#btn-close-tab').click(()=>{
         $('#div-reference-tab').css("display","none");
     });
+    
     // Button
     $('#home-btn').click(()=>{
         // reset the setting.
@@ -290,10 +291,10 @@ $(document).ready(()=>{
     // manKi.update_cur_angle(dataIOT.getSensorSignal());
     // console.log(dataIOT.getSensorSignal())
     function render() {
-        let joinSignal = dataIOT.getSensorSignal();
-        joinSignal.forEach((angle)=>{
-            manKi.update_cur_angle(angle);
-        });
+        // let joinSignal = dataIOT.getSensorSignal();
+        // joinSignal.forEach((angle)=>{
+        //     manKi.update_cur_angle(angle);
+        // });
         update_data(manKi.raw_current);
         update_extention(manKi.endEffector);
         manKi.raw_current.forEach((raw, index)=>{
