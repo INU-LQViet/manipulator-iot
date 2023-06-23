@@ -16,15 +16,17 @@ const position_btns = ["#zplus-btn", "#zneg-btn","#xplus-btn", "#xneg-btn"];
 const set_position = ["ZP","ZN","XP","XN"];
 const UPjoin_btns = ["#btn-up-join1","#btn-up-join2","#btn-up-join3","#btn-up-join4"];
 const DOWNjoin_btns = ["#btn-down-join1","#btn-down-join2","#btn-down-join3","#btn-down-join4"];
-const stepvalue = [50, -50];
+// const stepvalue = [50, -50];
 // current angle
 const join_currents = ["#cur-join1","#cur-join2","#cur-join3","#cur-join4"];
 // initial data
-var init_data = [2045,2045,2045,2045];
-
+// var init_data = [2045,2045,2045,2045];
+var init_data = [2045,2843,2642,1218];
 // EndEffector
 const end_btns = ["#end-inc-btn","#end-des-btn"];
-const end_btn_value = [2048, -2048];
+const end_btn_value = [2040, -2040];
+const end_minVal = 2040;
+const end_maxVal = 16324;
 
 // Mathjs and kinematic
 var manKi = new Mankinematic(init_data);
@@ -88,9 +90,9 @@ const robot_parts = [
     {
         name: 'extension',
         coordinate: new THREE.Object3D(),
-        path: './static/js/threejs/model/Extension.stl',// Must be fixed
+        path: './static/js/threejs/model/End_150.stl',// Must be fixed
         angle: {x:0, y:0, z:0},
-        position: {x: 0,y:5,z:0,},
+        position: {x: 0,y:0,z:0,},
         colors: { color: 'black', specular: 0x111111, shininess: 10 },
         axis_rotate: 'D',
         calibrate: 0,
@@ -152,7 +154,8 @@ const update_data = (data)=>{
 };
 
 const update_extention = (data)=>{
-    robot_parts[5].coordinate.position.y = 5 + math.floor(data/2045);
+    robot_parts[5].coordinate.position.y = 4 + 0.6*math.floor(data/2045);
+    // robot_parts[5].coordinate.rotation.y = Math.PI*math.floor(data/2045)
 };
 
 const solveINV = (rad_phi0, targetT)=>{
@@ -186,10 +189,10 @@ $(document).ready(()=>{
     $('#home-btn').click(()=>{
         // reset the setting.
         $('#dis-step-input').val(1);
-        $('#rot-step-output').val(10);
-        $('#step-ext-output').val(1); 
+        $('#rot-step-input').val(10);
+        $('#step-ext-input').val(1); 
 
-        manKi.update_endEffector(0);
+        manKi.update_endEffector(2040);
         manKi.update_cur_angle(init_data);
         // console.log(manKi.raw_current);
         sendData(init_data);
@@ -252,24 +255,20 @@ $(document).ready(()=>{
             let maxvalue = 3068;
             let step_rot_val = ($('#rot-step-output').val())*12;
             if(manKi.raw_current[i] + step_rot_val <= maxvalue ){
-                let temp = [0,0,0,0];
                 let tempRaw = [...manKi.raw_current];
-                temp[i] = manKi.raw_current[i] + step_rot_val;
                 tempRaw[i] = manKi.raw_current[i] + step_rot_val;      
                 manKi.update_cur_angle(tempRaw);
-                sendData(temp);
+                sendData(manKi.raw_current);
             };
         });
         $(DOWNjoin_btns[i]).click(()=>{
             let minvalue = 1023;
             let step_rot_val = ($('#rot-step-output').val())*12;
             if(manKi.raw_current[i] - step_rot_val >= minvalue){
-                let temp = [0,0,0,0];
                 let tempRaw = [...manKi.raw_current];
-                temp[i] = manKi.raw_current[i] - step_rot_val;
                 tempRaw[i] = manKi.raw_current[i] - step_rot_val;    
                 manKi.update_cur_angle(tempRaw);
-                sendData(temp);
+                sendData(manKi.raw_current);
             };
         });
     };
@@ -278,9 +277,9 @@ $(document).ready(()=>{
     end_btns.forEach((btn, index)=>{
         $(btn).click(()=>{
             let step_ext_val = ($('#step-ext-output').val())*end_btn_value[index];
-            if(manKi.endEffector + step_ext_val <= 14336 && manKi.endEffector + step_ext_val >=0){
+            if(manKi.endEffector + step_ext_val <= end_maxVal && manKi.endEffector + step_ext_val >= end_minVal){
                 manKi.update_endEffector(manKi.endEffector + step_ext_val);
-                sendData([0,0,0,0]);
+                sendData(manKi.raw_current);
             };
         });
     });
@@ -297,12 +296,11 @@ $(document).ready(()=>{
         // });
         update_data(manKi.raw_current);
         update_extention(manKi.endEffector);
-        manKi.raw_current.forEach((raw, index)=>{
-            $(join_currents[index]).text(Math.floor(raw*0.088)-90);
-        });
+        // manKi.raw_current.forEach((raw, index)=>{
+        //     $(join_currents[index]).text(Math.floor(raw*0.088)-90);
+        // });
         manipulator.drawing(canvas);
         requestAnimationFrame(render);
-        manKi.update_render(false);
     };
     requestAnimationFrame(render);
 }); 

@@ -4,6 +4,10 @@ This is landing page of a web application of web of thing to control a manipulat
 - Add python server to get firebase data
 - Fixed bugs and improve performance.
 
+# update 23_06_23
+- Change the end Effector 
+- 
+
 ## Requirement
 - html, css, js
 - Firebased
