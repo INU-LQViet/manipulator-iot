@@ -15,21 +15,37 @@
         <h1>Infor:</h1>
         <p>This is the landing page for an IOT web application of a robot arm.</p>
         <p>Author: lqviet</p>
-        <p>version : 1.230608</p>
+        <p>version : 1.230623</p>
         <p>New update! Add Firebased into Project.</p>
+        <p>version : 1.230625</p>
+        <p>Add Camera! Fixed bug and improve performance</p>
     </header>
     <main>
         <div class="main-container">
+            <div class="btn-camshow-container">
+                <input type="button" value ="CAM" class="btn-open-tab" id="btn-open-CAM">
+            </div>
+
             <div class="canvas-container">
                 <canvas id="arm-view">The brower doesn't support</canvas>
             </div>
             <div class="btn-show-container">
-                <input type="button" value ="C" id="btn-open-tab">
+                <input type="button" value ="CON" class= "btn-open-tab" id="btn-open-tab">
+            </div>
+            
+        </div>
+        <div class="cam-ref-tab" id="cam-ref-tab">
+            <input type="button" value="X" class="btn-close-tab" id="btn-close-CAM">
+            <h4>
+                Manipulator-Live-Stream
+            </h4>
+            <div class="cam-container">
+                <iframe width="400" height="300" autoplay="1" src="https://www.youtube.com/embed/fw_OoMBy9Wc?control=0" frameborder="0" allow="accelerometer; clipboard-write; autoplay; modestbranding;rel;encrypted-media;loop; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
             </div>
         </div>
         <div class="input-container" id="div-reference-tab">
             <div>
-                <input type="button" value="X" id="btn-close-tab">
+                <input type="button" value="X" class="btn-close-tab" id="btn-close-tab">
             </div>
             <div>
                 <h6>POSITION CONTROL</h6>

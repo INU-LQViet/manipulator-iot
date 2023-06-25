@@ -184,6 +184,14 @@ $(document).ready(()=>{
     $('#btn-close-tab').click(()=>{
         $('#div-reference-tab').css("display","none");
     });
+
+    $('#btn-open-CAM').click(()=>{
+        $('#cam-ref-tab').show();
+    });
+
+    $('#btn-close-CAM').click(()=>{
+        $('#cam-ref-tab').css("display","none");
+    });
     
     // Button
     $('#home-btn').click(()=>{
